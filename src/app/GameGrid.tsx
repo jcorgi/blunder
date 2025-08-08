@@ -15,32 +15,14 @@ export default function GameGrid() {
     const [selectedCells, setSelectedCells] = useState<number[]>([]);
     const [validMoves, setValidMoves] = useState<number[]>([]);
 
+   
+
     const handleMouseDown = useCallback((index: number) => {
-        const row = Math.floor(index / 8);
-        const col = index % 8;
-        console.log(validMoves);
-
         if (validMoves.length == 0) {
-            const moves: Position[] = board.getValidMoves({row: row, col: col}) ?? [];
-            const vmoves: number[] = [];
-
-            for(const move of moves) {
-                vmoves.push(move.row * 8 + move.col)
-            }
-            setSelectedCells([index]);
-            setIsSelecting(true);
-            setValidMoves(vmoves);
-        } else {
-            if (validMoves.includes(index)) {
-                const srow = Math.floor(selectedCells[0] / 8);
-                const scol = selectedCells[0] % 8;
-                board.movePiece({row: srow, col: scol}, {row: row, col: col});
-            }
-            setIsSelecting(false);
-            setSelectedCells([]);
-            setValidMoves([]);
+            selectingPieceState(index) 
+        } else { 
+            selectingMoveState(index)
         }
-        console.log(validMoves);
     }, [validMoves, selectedCells, board]);
 
     return (
@@ -91,4 +73,33 @@ export default function GameGrid() {
             })}
         </div>
     );
+
+     function selectingPieceState(index: number) {
+        const row = Math.floor(index / 8);
+        const col = index % 8;
+        const moves: Position[] = board.getValidMoves({row: row, col: col}) ?? [];
+        const vmoves: number[] = [];
+
+        for(const move of moves) {
+            vmoves.push(move.row * 8 + move.col)
+        }
+        setSelectedCells([index]);
+        setIsSelecting(true);
+        setValidMoves(vmoves);
+    }
+
+    function selectingMoveState(index: number) {
+        const row = Math.floor(index / 8);
+        const col = index % 8;
+        if (validMoves.includes(index)) {
+            const srow = Math.floor(selectedCells[0] / 8);
+            const scol = selectedCells[0] % 8;
+            board.movePiece({row: srow, col: scol}, {row: row, col: col});
+            setIsSelecting(false);
+            setSelectedCells([]);
+            setValidMoves([]);
+        } else {
+           selectingPieceState(index) 
+        }
+    }
 }

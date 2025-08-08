@@ -40,12 +40,7 @@ export default function GameGrid() {
             setSelectedCells([]);
             setValidMoves([]);
         }
-
         console.log(validMoves);
-
-
-        
-
     }, [validMoves, selectedCells, board]);
 
     return (
@@ -62,18 +57,13 @@ export default function GameGrid() {
                     <div
                         key={index}
                         className={`
-                            w-10 h-10 border-2 border-gray-800 flex items-center justify-center 
+                            w-10 h-10 flex items-center justify-center 
                             text-xl font-bold transition-colors cursor-pointer select-none touch-none
                             ${isLight
                                 ? 'bg-blue-200 hover:bg-blue-300' 
                                 : 'bg-white hover:bg-gray-200'
                             }
-                            ${selectedCells.includes(index) 
-                                ? 'border-2 border-blue-500'  
-                                : validMoves.includes(index) 
-                                    ? 'border-2 border-red-500' 
-                                    : 'border-2 border-none'
-                            }
+
                             ${(piece?.order == 0) ? 'text-blue-500' : 'text-gray-950' }
 
                         `}
@@ -82,7 +72,20 @@ export default function GameGrid() {
                             handleMouseDown(index);
                         }}
                     >
-                        {piece?.image ?? ''}
+                        <div
+                            className={`
+                                w-5 h-5 flex items-center justify-center
+                                ${selectedCells.includes(index) 
+                                ? ' border-1 border-blue-500' 
+                                : validMoves.includes(index) 
+                                    ? 'w-5 h-5 bg-gray-300 rounded-full' 
+                                    : 'bg-transparent'
+                            }
+                            `} 
+                        >
+                            {piece?.image ?? ''}
+                        </div>
+                        
                     </div>
                 );
             })}
